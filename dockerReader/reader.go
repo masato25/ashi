@@ -2,10 +2,20 @@ package dockerReader
 
 import (
   "github.com/fsouza/go-dockerclient"
+  "regexp"
+  "log"
 )
 
-var dockersoc string = "unix:///var/run/docker.sock"
-func ConatainerRead() (contains []docker.APIContainers, err error){
+
+func GetContainers(dockersoc string) ([]ServiesObj){
+  container, err := GetContainerList(dockersoc)
+  if(err != nil){
+    log.Println(err.Error())
+  }
+  return getContainerObj(container)
+}
+
+func GetContainerList(dockersoc string) (contains []docker.APIContainers, err error) {
   var client *docker.Client
   client, err = docker.NewClient(dockersoc)
   if err != nil{
@@ -19,17 +29,21 @@ type ServiesObj struct{
   Name string
   ID string
   Ports []int
+  OnePort int
+  IP string
 }
 
-func GetPublicPort(contains []docker.APIContainers) (serobj []ServiesObj){
-  if len(contains) == 0{
+func getContainerObj(containers []docker.APIContainers) (serobj []ServiesObj){
+  if len(containers) == 0{
     return
   }else{
-    for _, c := range contains{
+    for _, c := range containers{
       if c.State == "running"{
         var ser ServiesObj
-        ser.Name = c.Names[0]
+        ser.Name = getName(c.Names[0])
         ser.ID = c.ID[0:4]
+        ser.IP = getDokcerIpv4(c.Networks.Networks)
+        ser.OnePort = int(c.Ports[0].PublicPort)
         var ports []int
         for _, p := range c.Ports{
           ports = append(ports, int(p.PublicPort))
@@ -40,4 +54,12 @@ func GetPublicPort(contains []docker.APIContainers) (serobj []ServiesObj){
     }
     return
   }
+}
+
+func getName(name string)(string){
+  return regexp.MustCompile("^\\W+").ReplaceAllString(name, "")
+}
+
+func getDokcerIpv4(dockernet map[string]docker.ContainerNetwork) (string){
+  return dockernet["bridge"].IPAddress
 }

@@ -1,16 +1,21 @@
 package main
 
 import (
-  "github.com/hashicorp/consul/api"
-  "fmt"
+  "github.com/masato25/ashi/consulAshi"
+  "github.com/masato25/ashi/dockerReader"
+  "github.com/masato25/ashi/g"
+  "log"
 )
 
 func main(){
-  client, err := api.NewClient(api.DefaultConfig())
-  catalog := client.Catalog()
-  if err != nil {
-      panic(err)
+  //set conf paht
+  g.Set("ashi", "./conf")
+  conf := g.Config()
+  // //get docker list
+  container := dockerReader.GetContainers(conf.DOCKERSOC)
+  client := consulAshi.Client()
+  for _, c := range container {
+    log.Println("will register", c.ID, c.Name, c.OnePort, c.IP)
+    consulAshi.ServiceRegister(conf.IP, c.Name, c.ID, c.OnePort, client)
   }
-  services, meta, err := catalog.Service("consul", "", nil)
-  fmt.Printf("%v %v %v", services[0].ServiceAddress, meta, err)
 }

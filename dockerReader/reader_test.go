@@ -3,11 +3,18 @@ package dockerReader
 import (
 	"testing"
 	. "github.com/smartystreets/goconvey/convey"
+	"github.com/masato25/ashi/g"
 )
 
 func TestDockerReader(t *testing.T) {
+	g.Set("ashi", "../conf")
+	conf := g.Config()
 	Convey("Get dokcer info", t, func() {
-		container, _ := ConatainerRead()
+		container, _ := GetContainerList(conf.DOCKERSOC)
+		Convey("Get ip addresss of container", func(){
+			ip := getDokcerIpv4(container[0].Networks.Networks)
+			So(ip, ShouldEqual, "172.17.0.2")
+		})
 		Convey("Get number of docker", func(){
       So(len(container), ShouldBeGreaterThan, 0)
     })
@@ -17,7 +24,7 @@ func TestDockerReader(t *testing.T) {
 		})
 
 		Convey("Get ports", func(){
-			cobj := GetPublicPort(container)
+			cobj := GetContainers(conf.DOCKERSOC)
 			So(len(cobj[0].Ports), ShouldBeGreaterThan, 0)
 		})
 	})

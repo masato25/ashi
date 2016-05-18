@@ -1,0 +1,8 @@
+{
+  "consul_server_addresses": "10.0.0.164, 10.0.0.165, 10.0.0.166",
+  "ip": "10.0.0.165",
+  "http_port": 8500,
+  "datacenter": "tw",
+  "node": "myarch",
+  "dockersoc": "unix:///var/run/docker.sock"
+}
