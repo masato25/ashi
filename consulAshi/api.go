@@ -27,44 +27,15 @@ func ParepareReg(ip string, name string, id string, port int) (reg *api.CatalogR
     Port:port,
     Address: ip,
   }
-  // check := &api.AgentServiceCheck{
-  //     TCP: fmt.Sprintf("%s:%d", ip, port),
-	// }
+
   reg = &api.CatalogRegistration{
     Datacenter: conf.DATACENTER,
     Address:    selectAvailableConsulServer(conf.ADDRESSES, conf.HTTPPORT),
     Node:       conf.NODE,
     Service:    services,
-    // Check:      check,
   }
   return
 }
-
-// func ParepareReg2()(reg *api.CatalogRegistration){
-//   service := &api.AgentService{
-// 		ID:      "redis1",
-// 		Service: "redis",
-// 		Tags:    []string{"master", "v1"},
-// 		Port:    8000,
-// 	}
-//
-// 	check := &api.AgentCheck{
-// 		Node:      "foobar",
-// 		CheckID:   "service:redis1",
-// 		Name:      "Redis health check",
-// 		Notes:     "Script based health check",
-// 		ServiceID: "redis1",
-// 	}
-//
-// 	reg = &api.CatalogRegistration{
-// 		Datacenter: "owl",
-// 		Node:       "myarch",
-// 		Address:    "10.0.0.165",
-// 		Service:    service,
-// 		Check:      check,
-// 	}
-//   return
-// }
 
 
 func ParepareRegSer(ip string, name string, id string, port int) (reg *api.AgentServiceRegistration){
