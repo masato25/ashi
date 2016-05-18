@@ -3,44 +3,27 @@ package consulAshi
 import (
 	"testing"
 	. "github.com/smartystreets/goconvey/convey"
-	"github.com/hashicorp/consul/api"
 	"github.com/masato25/ashi/g"
 )
 
 func TestConsulAshi(t *testing.T) {
 	g.Set("ashi_example", "../conf")
-	Convey("Get consul client kv", t, func() {
+	conf := g.Config()
+	Convey("Consul register testing", t, func() {
     clinet := Client()
-		Convey("Put KV", func(){
-      // Get a handle to the KV API
-      kv := clinet.KV()
-      // PUT a new KV pair
-      p := &api.KVPair{Key: "foo", Value: []byte("test")}
-      _, err := kv.Put(p, nil)
-      if err != nil {
-          panic(err)
-      }
-      // Lookup the pair
-      pair, _, err := kv.Get("foo", nil)
-      if err != nil {
-          panic(err)
-      }
-      So(string(pair.Value), ShouldEqual, "test")
-			kv.Delete("foo", nil)
-    })
 		Convey("Gen Consul services register text", func(){
-			apiw := ParepareReg("10.0.0.165", "nignig", "owl", 4567)
-			So(apiw.Address, ShouldEqual, "10.0.0.165")
+			apiw := ParepareReg(conf.IP, "nignig", "owl", 4567)
+			So(apiw.Address, ShouldEqual, conf.IP)
 		})
 		Convey("Register Consul services", func(){
-			err := ServiceRegister("10.0.0.165", "nignig", "owl", 4567, clinet)
+			err := ServiceRegister(conf.IP, "nignig", "owl", 4567, clinet)
 			So(err, ShouldEqual, nil)
 		})
 	})
 
 	Convey("Check Consul Server status", t, func(){
 		Convey("get return code 200", func(){
-			scode, err := CheckConsulServer("owl.fastweb.com.cn", 80)
+			scode, err := CheckConsulServer(conf.IP, 8500)
 			if err != nil{
 				So(err, ShouldNotBeEmpty)
 			}else{

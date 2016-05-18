@@ -13,7 +13,7 @@ func TestDockerReader(t *testing.T) {
 		container, _ := GetContainerList(conf.DOCKERSOC)
 		Convey("Get ip addresss of container", func(){
 			ip := getDokcerIpv4(container[0].Networks.Networks)
-			So(ip, ShouldEqual, "172.17.0.2")
+			So(ip, ShouldNotBeEmpty)
 		})
 		Convey("Get number of docker", func(){
       So(len(container), ShouldBeGreaterThan, 0)
