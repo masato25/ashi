@@ -4,5 +4,11 @@
   "http_port": 8500,
   "datacenter": "tw",
   "node": "myarch2",
-  "dockersoc": "unix:///var/run/docker.sock"
+  "dockersoc": "unix:///var/run/docker.sock",
+  "cert": {
+    "enable": true,
+    "cafile": "./ca.ca",
+    "certfile": "./cert.ca",
+    "keyfile": "./key.ca"
+  }
 }

@@ -2,11 +2,12 @@ package g
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 	"log"
 	"os/exec"
 	"regexp"
 	"sync"
+
+	"github.com/spf13/viper"
 )
 
 type Gconfig struct {
@@ -16,6 +17,14 @@ type Gconfig struct {
 	NODE       string
 	HTTPPORT   int
 	DOCKERSOC  string
+	CertConf   *CertConf
+}
+
+type CertConf struct {
+	Enable   bool
+	CAFile   string
+	CertFile string
+	KeyFile  string
 }
 
 var (
@@ -52,5 +61,10 @@ func Set(f string, confpath string) {
 	c.NODE = viper.Get("node").(string)
 	c.HTTPPORT = int(viper.Get("http_port").(float64))
 	c.DOCKERSOC = viper.Get("dockersoc").(string)
+	var certconf *CertConf
+	certconf.Enable = viper.Get("cert.enable").(bool)
+	certconf.CAFile = viper.Get("cert.cafile").(string)
+	certconf.CertFile = viper.Get("cert.certfile").(string)
+	certconf.KeyFile = viper.Get("cert.keyfile").(string)
 	gconfig = &c
 }
