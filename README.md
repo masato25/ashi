@@ -21,3 +21,28 @@ Docker-cli can know the status of each container, so ashi using Docker API to ge
   * datacenter -> datacenter of consul server
   * node -> node name of consul server
   * dockersoc ->  Docker daemon to listen on.
+  * token -> [ToDo]
+  * cert -> TLS support
+
+* A sample server conf for TLS
+```
+{
+    "bootstrap": true,
+    "server": true,
+    "datacenter": "tw",
+    "data_dir": "./data",
+    "ui_dir": "./ui",
+    "log_level": "INFO",
+    "enable_syslog": true,
+    "bind_addr": "192.168.2.105",
+    "ports": {
+      "https": 8888
+    },
+    "addresses" : {
+      "https": "192.168.2.105"
+    },
+    "ca_file": "./ssl/ca/ca.crt",
+    "cert_file": "./ssl/server/server.crt",
+    "key_file": "./ssl/server/server.key"
+}
+```
