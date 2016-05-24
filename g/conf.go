@@ -17,14 +17,16 @@ type Gconfig struct {
 	NODE       string
 	HTTPPORT   int
 	DOCKERSOC  string
-	CertConf   *CertConf
+	TOKEN      string
+	CertConf   *CertConfig
 }
 
-type CertConf struct {
-	Enable   bool
-	CAFile   string
-	CertFile string
-	KeyFile  string
+type CertConfig struct {
+	Enable    bool
+	CAFile    string
+	CertFile  string
+	KeyFile   string
+	HTTPSPORT int
 }
 
 var (
@@ -57,14 +59,17 @@ func Set(f string, confpath string) {
 		}
 		c.IP = string(output)
 	}
-	c.DATACENTER = viper.Get("datacenter").(string)
-	c.NODE = viper.Get("node").(string)
-	c.HTTPPORT = int(viper.Get("http_port").(float64))
-	c.DOCKERSOC = viper.Get("dockersoc").(string)
-	var certconf *CertConf
-	certconf.Enable = viper.Get("cert.enable").(bool)
-	certconf.CAFile = viper.Get("cert.cafile").(string)
-	certconf.CertFile = viper.Get("cert.certfile").(string)
-	certconf.KeyFile = viper.Get("cert.keyfile").(string)
+	c.DATACENTER = viper.GetString("datacenter")
+	c.NODE = viper.GetString("node")
+	c.HTTPPORT = int(viper.GetFloat64("http_port"))
+	c.DOCKERSOC = viper.GetString("dockersoc")
+	c.TOKEN = viper.GetString("token")
+	var certconf CertConfig
+	certconf.CAFile = viper.GetString("cert.cafile")
+	certconf.CertFile = viper.GetString("cert.certfile")
+	certconf.KeyFile = viper.GetString("cert.keyfile")
+	certconf.Enable = viper.GetBool("cert.enable")
+	certconf.HTTPSPORT = viper.GetInt("cert.https_port")
+	c.CertConf = &certconf
 	gconfig = &c
 }

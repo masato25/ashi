@@ -5,10 +5,12 @@
   "datacenter": "tw",
   "node": "myarch2",
   "dockersoc": "unix:///var/run/docker.sock",
+  "token": "",
   "cert": {
     "enable": true,
-    "cafile": "./ca.ca",
-    "certfile": "./cert.ca",
-    "keyfile": "./key.ca"
+    "cafile": "./ssl/ca/ca.crt",
+    "certfile": "./ssl/client/client.crt",
+    "keyfile": "./ssl/client/client.key",
+    "https_port": 8888
   }
 }
